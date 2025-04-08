@@ -1,9 +1,9 @@
 # Task Manager App
 #### Full Stack Engineering Team 1
-- Justin Chen
 - Khanh Le
 - Lily Le Hao
-> April 6 2025
+- Justin Chen
+> April 8, 2025
 
 ## Description
 A task management application using React and Express
@@ -17,14 +17,13 @@ A task management application using React and Express
 ### Backend Setup
 ```bash
 cd backend
-npm install express mongoose cors
+npm install
 node server.js
 ```
 
 ### Frontend Setup
 ```bash
 cd frontend
-npx create-react-app .
-npm install axios
+npm install
 npm start
 ```
