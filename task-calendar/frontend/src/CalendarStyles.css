@@ -1,0 +1,34 @@
+.has-tasks {
+    background-color: lightgreen !important; /* Light green background for dates with tasks */
+}
+
+/* Center the calendar and add some padding */
+.calendar-container {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: calc(100vh - 100px); /* Full viewport height minus header space */
+    padding: 0; /* Remove padding to move it up */
+    margin-top: 5px; /* Set margin to a small value for spacing */
+}
+
+/* Style the calendar */
+.react-calendar {
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+    background-color: white; /* Background color */
+    width: 90%; /* Make the calendar take up 90% of the width */
+    max-width: 600px; /* Set a maximum width */
+    height: auto; /* Allow height to adjust automatically */
+}
+
+/* Style the tiles */
+.react-calendar__tile {
+    border-radius: 5px; /* Rounded corners for tiles */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.react-calendar__tile:hover {
+    background-color: #f0f0f0; /* Light gray on hover */
+}

@@ -1,0 +1,26 @@
+.task-input-form {
+    display: flex;
+    justify-content: center; /* Center the form */
+    margin: 20px 0; /* Add margin */
+}
+
+.task-input {
+    padding: 10px; /* Add padding */
+    border: 1px solid #ccc; /* Border */
+    border-radius: 5px; /* Rounded corners */
+    margin-right: 10px; /* Space between input and button */
+    width: 300px; /* Fixed width */
+}
+
+.add-task-button {
+    padding: 10px 15px; /* Padding for button */
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+}
+
+.add-task-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
