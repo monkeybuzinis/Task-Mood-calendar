@@ -1,17 +1,16 @@
 import React from 'react';
+import Task from './Task';
+import './TaskListStyles.css';
 
 const TaskList = ({ tasks, onToggle, onDelete }) => (
-  <ul>
+  <ul className="task-list">
     {tasks.map(task => (
-      <li key={task._id}>
-        <input
-          type="checkbox"
-          checked={task.completed}
-          onChange={() => onToggle(task)}
-        />
-        {task.title}
-        <button onClick={() => onDelete(task._id)}>Delete</button>
-      </li>
+      <Task
+        key={task._id}
+        task={task}
+        onToggle={onToggle}
+        onDelete={onDelete}
+      />
     ))}
   </ul>
 );
