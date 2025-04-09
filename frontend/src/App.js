@@ -12,12 +12,16 @@ function App() {
 
   const fetchTasks = async () => {
     const res = await api.get('/tasks');
+    console.log('Fetched tasks:', res.data); // Log the fetched tasks
     setTasks(res.data.reduce((acc, task) => {
-      const date = task.date.split('T')[0];
-      return {
-        ...acc,
-        [date]: [...(acc[date] || []), task]
-      };
+      if (task.date) { // Check if task.date is defined
+        const date = task.date.split('T')[0];
+        return {
+          ...acc,
+          [date]: [...(acc[date] || []), task]
+        };
+      }
+      return acc; // If date is undefined, return the accumulator unchanged
     }, {}));
   };
 
@@ -66,17 +70,19 @@ function App() {
   const handleDateSelect = (date) => {
     setSelectedDate(date);
   };
-// test khanh kim le
-  const handleAddTask = (task) => {
-    const dateKey = selectedDate.toISOString().split('T')[0];
-    setTasks(prevTasks => ({
-      ...prevTasks,
-      [dateKey]: [...(prevTasks[dateKey] || []), task]
-    }));
-  };
+
+  // const handleAddTask = (task) => {
+  //   const dateKey = selectedDate.toISOString().split('T')[0];
+  //   setTasks(prevTasks => ({
+  //     ...prevTasks,
+  //     [dateKey]: [...(prevTasks[dateKey] || []), task]
+  //   }));
+  // };
 
   useEffect(() => {
     fetchTasks();
+    // Optionally set a default date if needed
+    // setSelectedDate(new Date());
   }, []);
 
   return (
