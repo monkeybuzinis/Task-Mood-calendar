@@ -60,11 +60,27 @@ function App() {
   };
 
   const deleteTask = async (id) => {
-    await api.delete(`/tasks/${id}`);
-    setTasks(prevTasks => ({
-      ...prevTasks,
-      [selectedDate.toISOString().split('T')[0]]: prevTasks[selectedDate.toISOString().split('T')[0]].filter(t => t._id !== id)
-    }));
+    try {
+      await api.delete(`/tasks/${id}`);
+      
+      // Update the state after deletion
+      setTasks(prevTasks => {
+        const updatedTasks = {
+          ...prevTasks,
+          [selectedDate.toISOString().split('T')[0]]: prevTasks[selectedDate.toISOString().split('T')[0]].filter(t => t._id !== id)
+        };
+
+        // Check if there are any tasks left for the selected date
+        if (updatedTasks[selectedDate.toISOString().split('T')[0]].length === 0) {
+          // If no tasks left, remove the date from the tasks object
+          delete updatedTasks[selectedDate.toISOString().split('T')[0]];
+        }
+
+        return updatedTasks;
+      });
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
   const handleDateSelect = (date) => {
