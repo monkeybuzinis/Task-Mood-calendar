@@ -87,19 +87,20 @@ function App() {
     setSelectedDate(date);
   };
 
-  // const handleAddTask = (task) => {
-  //   const dateKey = selectedDate.toISOString().split('T')[0];
-  //   setTasks(prevTasks => ({
-  //     ...prevTasks,
-  //     [dateKey]: [...(prevTasks[dateKey] || []), task]
-  //   }));
-  // };
-
   useEffect(() => {
     fetchTasks();
-    // Optionally set a default date if needed
-    // setSelectedDate(new Date());
   }, []);
+
+  // Calculate the number of uncompleted tasks for the selected date
+  const getUncompletedTaskCount = () => {
+    const dateKey = selectedDate?.toISOString().split('T')[0];
+    if (dateKey && tasks[dateKey]) {
+      return tasks[dateKey].filter(task => !task.completed).length;
+    }
+    return 0;
+  };
+
+  const uncompletedTaskCount = getUncompletedTaskCount();
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
@@ -107,7 +108,9 @@ function App() {
       <CalendarComponent onDateSelect={handleDateSelect} tasks={tasks} />
       {selectedDate && (
         <div style={{ marginTop: '5px' }}>
-          <h2>Tasks for {selectedDate.toDateString()}</h2>
+          <h2>
+            {`You have ${uncompletedTaskCount} tasks for ${selectedDate.toDateString()}`}
+          </h2>
           <TaskInput title={title} setTitle={setTitle} onAddTask={addTask} />
           <TaskList tasks={tasks[selectedDate.toISOString().split('T')[0]] || []} onToggle={toggleTask} onDelete={deleteTask} />
         </div>
