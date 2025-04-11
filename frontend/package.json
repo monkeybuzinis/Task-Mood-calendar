@@ -2,8 +2,11 @@
   "name": "task-manager-frontend",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "browserslist": {
     "production": [
@@ -26,7 +29,10 @@
     "axios": "^1.8.4",
     "react": "^19.1.0",
     "react-calendar": "^5.1.0",
-    "react-dom": "^19.1.0",
-    "react-scripts": "^5.0.1"
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^6.2.6"
   }
 }

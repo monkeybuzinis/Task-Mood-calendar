@@ -24,4 +24,4 @@ const TaskInput = ({ title, setTitle, onAddTask }) => {
     );
 };
 
-export default TaskInput;
+export default TaskInput; 

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
-import TaskList from './components/TaskList';
-import CalendarComponent from './CalendarComponent';
-import TaskInput from './TaskInput';
-import './CalendarStyles.css'; // Import custom styles
-import './GlobalStyles.css'; // Import global styles
+import TaskList from './components/TaskList.jsx';
+import CalendarComponent from './CalendarComponent.jsx';
+import TaskInput from './TaskInput.jsx';
+import './CalendarStyles.css';
+import './GlobalStyles.css';
 
 function App() {
   const [tasks, setTasks] = useState({});
@@ -13,16 +13,16 @@ function App() {
 
   const fetchTasks = async () => {
     const res = await api.get('/tasks');
-    console.log('Fetched tasks:', res.data); // Log the fetched tasks
+    console.log('Fetched tasks:', res.data);
     setTasks(res.data.reduce((acc, task) => {
-      if (task.date) { // Check if task.date is defined
+      if (task.date) {
         const date = task.date.split('T')[0];
         return {
           ...acc,
           [date]: [...(acc[date] || []), task]
         };
       }
-      return acc; // If date is undefined, return the accumulator unchanged
+      return acc;
     }, {}));
   };
 
@@ -63,20 +63,14 @@ function App() {
   const deleteTask = async (id) => {
     try {
       await api.delete(`/tasks/${id}`);
-      
-      // Update the state after deletion
       setTasks(prevTasks => {
         const updatedTasks = {
           ...prevTasks,
           [selectedDate.toISOString().split('T')[0]]: prevTasks[selectedDate.toISOString().split('T')[0]].filter(t => t._id !== id)
         };
-
-        // Check if there are any tasks left for the selected date
         if (updatedTasks[selectedDate.toISOString().split('T')[0]].length === 0) {
-          // If no tasks left, remove the date from the tasks object
           delete updatedTasks[selectedDate.toISOString().split('T')[0]];
         }
-
         return updatedTasks;
       });
     } catch (error) {
@@ -92,7 +86,6 @@ function App() {
     fetchTasks();
   }, []);
 
-  // Calculate the number of uncompleted tasks for the selected date
   const getUncompletedTaskCount = () => {
     const dateKey = selectedDate?.toISOString().split('T')[0];
     if (dateKey && tasks[dateKey]) {
@@ -120,4 +113,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
