@@ -18,8 +18,18 @@
   border-bottom: none;
 }
 
-.task-checkbox {
-  margin-right: 10px;
+/* New styles for the complete button */
+.complete-button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 5px 10px; /* Padding for button */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor */
+}
+
+.complete-button:hover {
+  background-color: #45a049; /* Darker green on hover */
 }
 
 .task-title {
