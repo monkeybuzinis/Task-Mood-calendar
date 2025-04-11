@@ -4,6 +4,7 @@ import TaskList from './components/TaskList';
 import CalendarComponent from './CalendarComponent';
 import TaskInput from './TaskInput';
 import './CalendarStyles.css'; // Import custom styles
+import './GlobalStyles.css'; // Import global styles
 
 function App() {
   const [tasks, setTasks] = useState({});
