@@ -228,7 +228,26 @@ function App() {
 
   const handleDateSelect = (date) => {
     setSelectedDate(date);
+    
+    // Convert selected date to dateKey format
+    const newDateKey = date.toISOString().split('T')[0];
+    
+    // If there's a selected task, check if it belongs to the newly selected date
+    if (selectedTask) {
+      const taskDate = new Date(selectedTask.date).toISOString().split('T')[0];
+      
+      // If the task is not from the newly selected date, clear it
+      if (taskDate !== newDateKey) {
+        setSelectedTask(null);
+      }
+    }
+
+    // Update completion status
     updateCompletionStatus(date);
+  };
+
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
   };
 
   const handleContentChange = async (taskId, newContent) => {
@@ -481,8 +500,7 @@ function App() {
               <WeeklyView 
                 selectedDate={selectedDate} 
                 tasks={tasks}
-                onTaskClick={setSelectedTask}
-                key={JSON.stringify(tasks)}
+                onTaskClick={handleTaskClick}
               />
             </div>
 
@@ -494,7 +512,24 @@ function App() {
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 padding: '20px'
               }}>
-                <h3 style={{ marginBottom: '15px' }}>Selected Task Details</h3>
+                <div style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  marginBottom: '15px' 
+                }}>
+                  <h3>Selected Task Details</h3>
+                  <div style={{ 
+                    fontSize: '0.9rem', 
+                    color: '#666' 
+                  }}>
+                    {new Date(selectedTask.date).toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </div>
+                </div>
                 <TaskDetails
                   task={selectedTask}
                   onTimeChange={handleTimeChange}
