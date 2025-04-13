@@ -26,8 +26,29 @@
 .react-calendar__tile {
     border-radius: 5px; /* Rounded corners for tiles */
     transition: background-color 0.3s; /* Smooth transition for hover effect */
+    position: relative;
+    z-index: 1;
 }
 
 .react-calendar__tile:hover {
     background-color: #f0f0f0; /* Light gray on hover */
+}
+
+.calendar-mood-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    border-radius: 4px;
+}
+
+.react-calendar__tile:enabled:hover .calendar-mood-indicator,
+.react-calendar__tile:enabled:focus .calendar-mood-indicator {
+    opacity: 0.9 !important;
+}
+
+.react-calendar__tile--active .calendar-mood-indicator {
+    opacity: 1 !important;
 }

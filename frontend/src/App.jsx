@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import api from './api';
 import TaskList from './components/TaskList.jsx';
-import CalendarComponent from './CalendarComponent.jsx';
+import CalendarComponent from './components/CalendarComponent.jsx';
 import WeeklyView from './components/WeeklyView.jsx';
 import TaskInput from './TaskInput.jsx';
 import TaskInputModal from './components/TaskInputModal.jsx';
 import TaskDetails from './components/TaskDetails';
+import MoodSelector from './components/MoodSelector';
 import './CalendarStyles.css';
 import './GlobalStyles.css';
 
@@ -18,24 +19,25 @@ function App() {
   const [completionStatus, setCompletionStatus] = useState({ percentage: 0, date: null });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [moods, setMoods] = useState({});
 
   const fetchTasks = async () => {
     try {
       setIsLoading(true);
       setError(null);
       
-      const res = await api.get('/tasks');
-      console.log('Fetched tasks:', res.data);
+    const res = await api.get('/tasks');
+    console.log('Fetched tasks:', res.data);
       
       if (!res.data) {
         throw new Error('No data received from server');
       }
 
       const tasksByDate = res.data.reduce((acc, task) => {
-        if (task.date) {
+      if (task.date) {
           const dateKey = new Date(task.date).toISOString().split('T')[0];
-          return {
-            ...acc,
+        return {
+          ...acc,
             [dateKey]: [...(acc[dateKey] || []), {
               ...task,
               timeRange: task.timeRange || `${new Date(task.startTime).toLocaleTimeString([], { 
@@ -48,9 +50,9 @@ function App() {
                 hour12: false 
               })}`
             }]
-          };
-        }
-        return acc;
+        };
+      }
+      return acc;
       }, {});
 
       setTasks(tasksByDate);
@@ -115,7 +117,7 @@ function App() {
 
   const handleTimeChange = async (taskId, newStartTime, newEndTime) => {
     try {
-      const dateKey = selectedDate.toISOString().split('T')[0];
+        const dateKey = selectedDate.toISOString().split('T')[0];
       const task = tasks[dateKey].find(t => t._id === taskId);
       
       const updatedTask = {
@@ -143,7 +145,7 @@ function App() {
             });
 
           return {
-            ...prevTasks,
+          ...prevTasks,
             [dateKey]: updatedTasks
           };
         });
@@ -311,6 +313,42 @@ function App() {
     }
   };
 
+  const handleMoodSelect = (mood) => {
+    const dateKey = selectedDate.toISOString().split('T')[0];
+    
+    // Update moods state
+    setMoods(prevMoods => ({
+      ...prevMoods,
+      [dateKey]: mood
+    }));
+
+    // Save to backend if needed
+    // saveMoodToBackend(dateKey, mood);
+  };
+
+  const getSelectedDateMood = () => {
+    const dateKey = selectedDate.toISOString().split('T')[0];
+    return moods[dateKey];
+  };
+
+  // Add useEffect to load moods if you're saving them
+  useEffect(() => {
+    const loadMoods = async () => {
+      try {
+        const response = await api.get('/moods');
+        const moodsData = response.data.reduce((acc, mood) => {
+          const dateKey = new Date(mood.date).toISOString().split('T')[0];
+          return { ...acc, [dateKey]: mood };
+        }, {});
+        setMoods(moodsData);
+      } catch (error) {
+        console.error('Error loading moods:', error);
+      }
+    };
+
+    loadMoods();
+  }, []);
+
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -475,10 +513,17 @@ function App() {
               onDateSelect={handleDateSelect} 
               tasks={tasks} 
               selectedDate={selectedDate}
+              moods={moods}
             />
             
             {/* Render completion status */}
             {renderCompletionStatus()}
+            
+            {/* Add Mood Selector */}
+            <MoodSelector
+              selectedMood={getSelectedDateMood()}
+              onMoodSelect={handleMoodSelect}
+            />
             
             <button 
               onClick={() => setIsModalOpen(true)}
@@ -537,8 +582,8 @@ function App() {
                   onDelete={handleDeleteTask}
                   onContentChange={handleContentChange}
                 />
-              </div>
-            )}
+        </div>
+      )}
           </div>
         </div>
       )}
