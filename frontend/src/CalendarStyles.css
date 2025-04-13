@@ -8,7 +8,7 @@
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     padding: 0; /* Remove padding to move it up */
-    margin: 64px 0;
+    margin: 0 0 20px 0; /* Remove top margin, keep bottom margin */
 }
 
 /* Style the calendar */
