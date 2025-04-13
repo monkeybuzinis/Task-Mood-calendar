@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const taskRoutes = require('./routes/tasks');
+const moodRoutes = require('./routes/moods');
 
 const app = express();
 
@@ -17,6 +18,7 @@ mongoose.connect('mongodb://localhost:27017/task-calendar', {
 
 // Routes
 app.use('/api/tasks', taskRoutes);
+app.use('/api/moods', moodRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

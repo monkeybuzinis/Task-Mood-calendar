@@ -1,3 +1,6 @@
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+
 const CalendarComponent = ({ onDateSelect, tasks, selectedDate, moods }) => {
   const tileClassName = ({ date }) => {
     const dateKey = date.toISOString().split('T')[0];
@@ -28,4 +31,6 @@ const CalendarComponent = ({ onDateSelect, tasks, selectedDate, moods }) => {
       tileContent={tileContent}
     />
   );
-}; 
+};
+
+export default CalendarComponent; 

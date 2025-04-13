@@ -7,11 +7,15 @@ const moodSchema = new mongoose.Schema({
   },
   level: {
     type: String,
-    required: true
+    required: true,
+    enum: ['Great', 'Good', 'Neutral', 'Bad', 'Terrible']
   },
   description: String,
   emoji: String,
-  color: String
+  color: {
+    type: String,
+    required: true
+  }
 });
 
 module.exports = mongoose.model('Mood', moodSchema);
