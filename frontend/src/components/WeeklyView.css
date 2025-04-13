@@ -1,0 +1,75 @@
+.weekly-view {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.day-column {
+  flex: 1;
+  min-width: 150px;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+
+.day-column:last-child {
+  border-right: none;
+}
+
+.header-cell {
+  padding: 12px 8px;
+  border-bottom: 1px solid #ddd;
+  background: #f8f9fa;
+  text-align: center;
+}
+
+.day-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.date-number {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.tasks-container {
+  padding: 8px;
+  flex-grow: 1;
+}
+
+.task-wrapper {
+  margin-bottom: 16px;
+}
+
+.task-time {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.task-item {
+  background-color: #007bff;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.task-item:hover {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transform: translateY(-1px);
+}
+
+.task-item.completed {
+  text-decoration: line-through;
+  color: #6c757d;
+  background-color: #e9ecef;
+}

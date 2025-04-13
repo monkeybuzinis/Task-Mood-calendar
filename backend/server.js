@@ -4,15 +4,21 @@ const cors = require('cors');
 const taskRoutes = require('./routes/tasks');
 
 const app = express();
-const PORT = 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
+
+// MongoDB Connection
+mongoose.connect('mongodb://localhost:27017/task-calendar', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+// Routes
 app.use('/api/tasks', taskRoutes);
 
-mongoose.connect('mongodb://localhost:27017/taskmanager')
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch(err => console.error(err));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

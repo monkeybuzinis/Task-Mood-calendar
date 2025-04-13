@@ -1,0 +1,134 @@
+.task-details {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.time-button {
+  min-width: 120px;
+  padding: 8px 16px;
+  background: #e9ecef;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s;
+}
+
+.time-button:hover {
+  background: #dee2e6;
+}
+
+.task-content-container {
+  flex: 1;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.task-content {
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.task-content:hover {
+  background-color: #f8f9fa;
+}
+
+.task-content-input {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: inherit;
+  font-family: inherit;
+  background-color: white;
+}
+
+.task-content-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.task-content.completed {
+  text-decoration: line-through;
+  color: #6c757d;
+  background-color: #f8f9fa;
+}
+
+.complete-button {
+  min-width: 100px;
+  padding: 8px 16px;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.complete-button.completed {
+  background: #198754;
+}
+
+.complete-button:hover {
+  opacity: 0.9;
+}
+
+.delete-button {
+  min-width: 80px;
+  padding: 8px 16px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.delete-button:hover {
+  background: #c82333;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content.small {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.delete-confirm {
+  background: #dc3545;
+  color: white;
+}
