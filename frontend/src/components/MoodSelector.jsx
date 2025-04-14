@@ -1,23 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './MoodSelector.css';
 
-const MOODS = [
-  { emoji: '😞', level: 'Very Low', description: 'Depressed, Exhausted', color: '#4B4B4B' },
-  { emoji: '😕', level: 'Low', description: 'Sad, Anxious', color: '#5C6BC0' },
-  { emoji: '😐', level: 'Neutral', description: 'Okay, Meh', color: '#B0BEC5' },
-  { emoji: '🙂', level: 'Medium', description: 'Content, Calm', color: '#81C784' },
-  { emoji: '😄', level: 'High', description: 'Happy, Motivated', color: '#AED581' },
-  { emoji: '🤩', level: 'Very High', description: 'Excited, Euphoric', color: '#FFF176' },
-  { emoji: '🧠', level: 'Focused', description: 'Productive, Clear', color: '#4FC3F7' },
-  { emoji: '🧘', level: 'Peaceful', description: 'Serene, Relaxed', color: '#CE93D8' }
-];
-
-const MoodSelector = ({ selectedMood, onMoodSelect }) => {
+const MoodSelector = ({ selectedMood, onMoodSelect, date }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [moods, setMoods] = useState([
+    { emoji: '😄', level: 'Very Happy', description: 'Vibrant, energetic, joyful', color: '#FFD700' },
+    { emoji: '🙂', level: 'Happy', description: 'Warm and cheerful', color: '#FFA500' },
+    { emoji: '😐', level: 'Neutral', description: 'Balanced, calm, impartial', color: '#C0C0C0' },
+    { emoji: '😕', level: 'Sad', description: 'Heavy, empty, somber', color: '#000000' },
+    { emoji: '😠', level: 'Angry', description: 'Intense, passionate, strong emotion', color: '#B22222' }
+  ]);
+
+  useEffect(() => {
+    // Load moods from localStorage on component mount
+    const savedMoods = localStorage.getItem('moods');
+    if (savedMoods) {
+      setMoods(JSON.parse(savedMoods));
+    } else {
+      // Save default moods to localStorage if not exists
+      localStorage.setItem('moods', JSON.stringify(moods));
+    }
+  }, []);
 
   const handleMoodSelect = (mood) => {
     onMoodSelect(mood);
     setIsModalOpen(false);
+    
+    // Save mood data to localStorage
+    if (date) {
+      const dateKey = date.toISOString().split('T')[0];
+      const savedMoods = JSON.parse(localStorage.getItem('moodData') || '{}');
+      savedMoods[dateKey] = mood;
+      localStorage.setItem('moodData', JSON.stringify(savedMoods));
+    }
   };
 
   return (
@@ -56,7 +71,7 @@ const MoodSelector = ({ selectedMood, onMoodSelect }) => {
               </button>
             </div>
             <div className="mood-grid">
-              {MOODS.map((mood) => (
+              {moods.map((mood) => (
                 <button
                   key={mood.level}
                   className={`mood-button ${selectedMood?.level === mood.level ? 'selected' : ''}`}
@@ -73,6 +88,14 @@ const MoodSelector = ({ selectedMood, onMoodSelect }) => {
                   </div>
                 </button>
               ))}
+              {selectedMood && (
+                <button
+                  className="mood-button clear-mood"
+                  onClick={() => handleMoodSelect(null)}
+                >
+                  Clear Mood
+                </button>
+              )}
             </div>
           </div>
         </div>

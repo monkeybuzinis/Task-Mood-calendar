@@ -1,5 +1,5 @@
 .has-tasks {
-    background-color: lightgreen !important; /* Light green background for dates with tasks */
+    background-color: transparent !important; /* Remove background color for dates with tasks */
 }
 
 /* Center the calendar and add some padding */
@@ -28,6 +28,7 @@
     transition: background-color 0.3s; /* Smooth transition for hover effect */
     position: relative;
     z-index: 1;
+    background-color: transparent !important; /* Ensure default background is transparent */
 }
 
 .react-calendar__tile:hover {
@@ -49,6 +50,34 @@
     opacity: 0.9 !important;
 }
 
+.react-calendar__tile--active {
+    background-color: rgba(0, 110, 220, 0.1) !important;
+    color: #006edc !important;
+}
+
 .react-calendar__tile--active .calendar-mood-indicator {
-    opacity: 1 !important;
+    opacity: 0.5 !important;
+}
+
+/* Custom styles */
+.current-date {
+    border: 3px solid #006edc !important;
+    border-radius: 4px;
+    background-color: #e6f2ff !important;
+    font-weight: bold !important;
+    box-shadow: 0 0 5px rgba(0, 110, 220, 0.5) !important;
+    transform: scale(1.05) !important;
+    transition: all 0.3s ease !important;
+}
+
+.current-date:hover {
+    background-color: #cce5ff !important;
+    transform: scale(1.08) !important;
+}
+
+.date-with-tasks {
+    text-decoration: underline;
+    text-decoration-color: #4CAF50;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
 }
