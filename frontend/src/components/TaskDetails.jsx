@@ -3,30 +3,39 @@ import './TaskDetails.css';
 
 const TaskDetails = ({ task, onTimeChange, onToggleComplete, onDelete, onContentChange }) => {
   const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
-  const [startTime, setStartTime] = useState(task.startTime.split('T')[1].substring(0, 5));
-  const [endTime, setEndTime] = useState(task.endTime.split('T')[1].substring(0, 5));
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState(task.title);
+  const [editedContent, setEditedContent] = useState(task.title || '');
   const [error, setError] = useState(null);
 
-  // Cập nhật editedContent khi task thay đổi
   useEffect(() => {
-    setEditedContent(task.title);
-  }, [task.title]);
+    // Chuyển đổi thời gian từ Date object hoặc string sang định dạng HH:mm
+    const formatTime = (time) => {
+      if (!time) return '';
+      if (typeof time === 'string') {
+        return time.split('T')[1].substring(0, 5);
+      }
+      if (time instanceof Date) {
+        return time.toTimeString().substring(0, 5);
+      }
+      return '';
+    };
 
-  const handleTimeChange = () => {
-    // Validate end time is after start time
-    const start = new Date(`2000-01-01T${startTime}`);
-    const end = new Date(`2000-01-01T${endTime}`);
-    
-    if (end <= start) {
-      setError('Thời gian kết thúc phải sau thời gian bắt đầu');
-      return;
+    setStartTime(formatTime(task.startTime));
+    setEndTime(formatTime(task.endTime));
+    setEditedContent(task.title || '');
+  }, [task]);
+
+  const handleTimeChange = async (newStartTime, newEndTime) => {
+    try {
+      await onTimeChange(task._id, newStartTime, newEndTime);
+      setError(null);
+      setIsTimeModalOpen(false);
+    } catch (error) {
+      setError(error.message);
     }
-
-    setError(null);
-    onTimeChange(task._id, startTime, endTime);
   };
 
   const handleContentSubmit = () => {
@@ -78,7 +87,7 @@ const TaskDetails = ({ task, onTimeChange, onToggleComplete, onDelete, onContent
       </div>
 
       {/* Complete Button */}
-      <button 
+      <button
         className={`complete-button ${task.completed ? 'completed' : ''}`}
         onClick={() => onToggleComplete(task._id)}
       >
@@ -100,7 +109,7 @@ const TaskDetails = ({ task, onTimeChange, onToggleComplete, onDelete, onContent
             <h3>Change Time</h3>
             <form onSubmit={(e) => {
               e.preventDefault();
-              handleTimeChange();
+              handleTimeChange(startTime, endTime);
             }}>
               <div className="time-inputs">
                 <input
