@@ -317,13 +317,17 @@ function App() {
     const dateKey = selectedDate.toISOString().split('T')[0];
     
     // Update moods state
-    setMoods(prevMoods => ({
-      ...prevMoods,
-      [dateKey]: mood
-    }));
-
-    // Save to backend if needed
-    // saveMoodToBackend(dateKey, mood);
+    setMoods(prevMoods => {
+      const newMoods = {
+        ...prevMoods,
+        [dateKey]: mood
+      };
+      
+      // Save to localStorage
+      localStorage.setItem('moodData', JSON.stringify(newMoods));
+      
+      return newMoods;
+    });
   };
 
   const getSelectedDateMood = () => {
@@ -331,16 +335,14 @@ function App() {
     return moods[dateKey];
   };
 
-  // Add useEffect to load moods if you're saving them
+  // Load moods from localStorage on app initialization
   useEffect(() => {
-    const loadMoods = async () => {
+    const loadMoods = () => {
       try {
-        const response = await api.get('/moods');
-        const moodsData = response.data.reduce((acc, mood) => {
-          const dateKey = new Date(mood.date).toISOString().split('T')[0];
-          return { ...acc, [dateKey]: mood };
-        }, {});
-        setMoods(moodsData);
+        const savedMoods = localStorage.getItem('moodData');
+        if (savedMoods) {
+          setMoods(JSON.parse(savedMoods));
+        }
       } catch (error) {
         console.error('Error loading moods:', error);
       }
