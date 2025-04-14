@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './TaskDetails.css';
 
 const TaskDetails = ({ task, onTimeChange, onToggleComplete, onDelete, onContentChange }) => {
   const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
-  const [startTime, setStartTime] = useState(task.timeRange.split(' - ')[0]);
-  const [endTime, setEndTime] = useState(task.timeRange.split(' - ')[1]);
+  const [startTime, setStartTime] = useState(task.startTime.split('T')[1].substring(0, 5));
+  const [endTime, setEndTime] = useState(task.endTime.split('T')[1].substring(0, 5));
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(task.title);
+  const [error, setError] = useState(null);
 
-  const handleTimeSubmit = (e) => {
-    e.preventDefault();
+  // Cập nhật editedContent khi task thay đổi
+  useEffect(() => {
+    setEditedContent(task.title);
+  }, [task.title]);
+
+  const handleTimeChange = () => {
+    // Validate end time is after start time
+    const start = new Date(`2000-01-01T${startTime}`);
+    const end = new Date(`2000-01-01T${endTime}`);
+    
+    if (end <= start) {
+      setError('Thời gian kết thúc phải sau thời gian bắt đầu');
+      return;
+    }
+
+    setError(null);
     onTimeChange(task._id, startTime, endTime);
-    setIsTimeModalOpen(false);
   };
 
   const handleContentSubmit = () => {
@@ -84,7 +98,10 @@ const TaskDetails = ({ task, onTimeChange, onToggleComplete, onDelete, onContent
         <div className="modal-overlay">
           <div className="modal-content small">
             <h3>Change Time</h3>
-            <form onSubmit={handleTimeSubmit}>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleTimeChange();
+            }}>
               <div className="time-inputs">
                 <input
                   type="time"
@@ -100,6 +117,7 @@ const TaskDetails = ({ task, onTimeChange, onToggleComplete, onDelete, onContent
                   required
                 />
               </div>
+              {error && <div className="error-message">{error}</div>}
               <div className="modal-actions">
                 <button type="button" onClick={() => setIsTimeModalOpen(false)}>
                   Cancel
