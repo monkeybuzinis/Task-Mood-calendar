@@ -250,6 +250,13 @@ function App() {
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
+    
+    // If the task's date is different from the currently selected date,
+    // update the selected date to match the task's date
+    const taskDate = new Date(task.date);
+    if (taskDate.toISOString().split('T')[0] !== selectedDate.toISOString().split('T')[0]) {
+      setSelectedDate(taskDate);
+    }
   };
 
   const handleContentChange = async (taskId, newContent) => {
