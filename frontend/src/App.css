@@ -1,0 +1,290 @@
+.App {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  gap: 20px;
+}
+
+.calendar-container {
+  flex: 1;
+  max-width: 800px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.calendar-container:hover {
+  transform: translateY(-5px);
+}
+
+.content-container {
+  flex: 1;
+  display: flex;
+  gap: 20px;
+}
+
+.left-panel {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.completion-status {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.completion-status:hover {
+  transform: translateY(-3px);
+}
+
+.completion-status h3 {
+  margin: 0 0 15px 0;
+  color: #2c3e50;
+  font-size: 1.2em;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #ecf0f1;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  transition: width 0.5s ease;
+}
+
+.completion-status span {
+  display: block;
+  text-align: center;
+  font-size: 1.5em;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+/* Animation for task completion */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.completion-status:hover .progress {
+  animation: pulse 1.5s infinite;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .App {
+    flex-direction: column;
+  }
+  
+  .calendar-container {
+    max-width: 100%;
+  }
+  
+  .content-container {
+    flex-direction: column;
+  }
+  
+  .left-panel {
+    width: 100%;
+  }
+}
+
+/* Loading animation */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Task form styling */
+.task-form {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.task-form:hover {
+  transform: translateY(-3px);
+}
+
+.task-form input,
+.task-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: border-color 0.3s ease;
+}
+
+.task-form input:focus,
+.task-form textarea:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.task-form button {
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.task-form button:hover {
+  transform: translateY(-2px);
+}
+
+/* Task list styling */
+.task-list {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.task-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.task-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.task-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.task-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  transition: background-color 0.3s ease;
+}
+
+.task-item:hover {
+  background-color: #f8f9fa;
+}
+
+.task-item.completed {
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+
+/* Mood selector styling */
+.mood-selector {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.mood-selector:hover {
+  transform: translateY(-3px);
+}
+
+.mood-option {
+  display: inline-block;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.mood-option:hover {
+  transform: scale(1.1);
+}
+
+.mood-option.selected {
+  border: 3px solid #3498db;
+}
+
+/* Calendar navigation buttons */
+.calendar-navigation button {
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.calendar-navigation button:hover {
+  transform: translateY(-2px);
+}
+
+/* Calendar tile styling */
+.calendar-tile {
+  transition: all 0.3s ease;
+}
+
+.calendar-tile:hover {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+/* Error message styling */
+.error-message {
+  background: #ff6b6b;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+} 
