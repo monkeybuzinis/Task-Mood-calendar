@@ -20,6 +20,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [moods, setMoods] = useState({});
+  const [selectedMood, setSelectedMood] = useState(null);
+  const [completionPercentage, setCompletionPercentage] = useState(0);
 
   const fetchTasks = async () => {
     try {
@@ -117,17 +119,34 @@ function App() {
 
   const handleTimeChange = async (taskId, newStartTime, newEndTime) => {
     try {
-        const dateKey = selectedDate.toISOString().split('T')[0];
+      // Validate time range
+      const start = new Date(`2000-01-01T${newStartTime}`);
+      const end = new Date(`2000-01-01T${newEndTime}`);
+      
+      if (end <= start) {
+        console.error("End time must be after start time");
+        return;
+      }
+
+      const dateKey = selectedDate.toISOString().split('T')[0];
       const task = tasks[dateKey].find(t => t._id === taskId);
       
+      if (!task) {
+        console.error("Task not found");
+        return;
+      }
+
       const updatedTask = {
         ...task,
-        timeRange: `${newStartTime} - ${newEndTime}`
+        timeRange: `${newStartTime} - ${newEndTime}`,
+        startTime: new Date(`${dateKey}T${newStartTime}`),
+        endTime: new Date(`${dateKey}T${newEndTime}`)
       };
 
       const res = await api.put(`/tasks/${taskId}`, updatedTask);
       
       if (res.status === 200) {
+        // Update tasks state
         setTasks(prevTasks => {
           const updatedTasks = prevTasks[dateKey]
             .map(t => t._id === taskId ? { ...res.data, timeRange: updatedTask.timeRange } : t)
@@ -145,10 +164,21 @@ function App() {
             });
 
           return {
-          ...prevTasks,
+            ...prevTasks,
             [dateKey]: updatedTasks
           };
         });
+
+        // Update selectedTask state immediately
+        if (selectedTask && selectedTask._id === taskId) {
+          setSelectedTask(prev => ({
+            ...prev,
+            timeRange: updatedTask.timeRange,
+            startTime: updatedTask.startTime,
+            endTime: updatedTask.endTime
+          }));
+        }
+
         updateCompletionStatus();
       }
     } catch (error) {
@@ -335,6 +365,8 @@ function App() {
       
       return newMoods;
     });
+
+    setSelectedMood(mood);
   };
 
   const getSelectedDateMood = () => {
@@ -361,6 +393,20 @@ function App() {
   useEffect(() => {
     fetchTasks();
   }, []);
+
+  useEffect(() => {
+    // Load mood for selected date
+    const dateKey = selectedDate.toISOString().split('T')[0];
+    const savedMoods = JSON.parse(localStorage.getItem('moodData') || '{}');
+    setSelectedMood(savedMoods[dateKey] || null);
+
+    // Calculate completion percentage for selected date
+    const dateTasks = tasks[dateKey] || [];
+    const completedTasks = dateTasks.filter(task => task.completed).length;
+    const totalTasks = dateTasks.length;
+    const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+    setCompletionPercentage(percentage);
+  }, [selectedDate, tasks]);
 
   const getUncompletedTaskCount = () => {
     const dateKey = selectedDate?.toISOString().split('T')[0];
@@ -530,8 +576,9 @@ function App() {
             
             {/* Add Mood Selector */}
             <MoodSelector
-              selectedMood={getSelectedDateMood()}
+              selectedMood={selectedMood}
               onMoodSelect={handleMoodSelect}
+              date={selectedDate}
             />
             
             <button 
@@ -591,8 +638,8 @@ function App() {
                   onDelete={handleDeleteTask}
                   onContentChange={handleContentChange}
                 />
-        </div>
-      )}
+              </div>
+            )}
           </div>
         </div>
       )}
