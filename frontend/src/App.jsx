@@ -28,8 +28,8 @@ function App() {
       setIsLoading(true);
       setError(null);
       
-    const res = await api.get('/tasks');
-    console.log('Fetched tasks:', res.data);
+      const res = await api.get('/tasks');
+      console.log('Fetched tasks:', res.data);
       
       if (!res.data) {
         throw new Error('No data received from server');
@@ -64,6 +64,25 @@ function App() {
       setError('Failed to load tasks. Please refresh the page.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const fetchMoods = async () => {
+    try {
+      const response = await api.get('/moods');
+      const moodsData = {};
+      response.data.forEach(mood => {
+        const dateKey = new Date(mood.date).toISOString().split('T')[0];
+        moodsData[dateKey] = {
+          level: mood.level,
+          description: mood.description,
+          emoji: mood.emoji,
+          color: mood.color
+        };
+      });
+      setMoods(moodsData);
+    } catch (error) {
+      console.error('Error fetching moods:', error);
     }
   };
 
@@ -359,10 +378,6 @@ function App() {
         ...prevMoods,
         [dateKey]: mood
       };
-      
-      // Save to localStorage
-      localStorage.setItem('moodData', JSON.stringify(newMoods));
-      
       return newMoods;
     });
 
@@ -374,20 +389,9 @@ function App() {
     return moods[dateKey];
   };
 
-  // Load moods from localStorage on app initialization
+  // Load moods from API on app initialization
   useEffect(() => {
-    const loadMoods = () => {
-      try {
-        const savedMoods = localStorage.getItem('moodData');
-        if (savedMoods) {
-          setMoods(JSON.parse(savedMoods));
-        }
-      } catch (error) {
-        console.error('Error loading moods:', error);
-      }
-    };
-
-    loadMoods();
+    fetchMoods();
   }, []);
 
   useEffect(() => {
@@ -397,8 +401,7 @@ function App() {
   useEffect(() => {
     // Load mood for selected date
     const dateKey = selectedDate.toISOString().split('T')[0];
-    const savedMoods = JSON.parse(localStorage.getItem('moodData') || '{}');
-    setSelectedMood(savedMoods[dateKey] || null);
+    setSelectedMood(moods[dateKey] || null);
 
     // Calculate completion percentage for selected date
     const dateTasks = tasks[dateKey] || [];
@@ -406,7 +409,7 @@ function App() {
     const totalTasks = dateTasks.length;
     const percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
     setCompletionPercentage(percentage);
-  }, [selectedDate, tasks]);
+  }, [selectedDate, tasks, moods]);
 
   const getUncompletedTaskCount = () => {
     const dateKey = selectedDate?.toISOString().split('T')[0];
