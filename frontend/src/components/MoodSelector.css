@@ -95,6 +95,7 @@
 
 .mood-button.selected {
   color: white;
+  background-color: var(--mood-color);
 }
 
 .mood-info {
@@ -113,4 +114,24 @@
   font-size: 0.8rem;
   opacity: 0.8;
   text-align: center;
+}
+
+.mood-button.clear-mood {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+.mood-button.clear-mood:hover {
+  background-color: #cc0000;
 }

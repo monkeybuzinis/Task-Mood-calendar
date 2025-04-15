@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './MoodSelector.css';
+import api from '../api';
 
 const MoodSelector = ({ selectedMood, onMoodSelect, date }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,27 +12,89 @@ const MoodSelector = ({ selectedMood, onMoodSelect, date }) => {
     { emoji: '😠', level: 'Angry', description: 'Intense, passionate, strong emotion', color: '#B22222' }
   ]);
 
-  useEffect(() => {
-    // Load moods from localStorage on component mount
-    const savedMoods = localStorage.getItem('moods');
-    if (savedMoods) {
-      setMoods(JSON.parse(savedMoods));
-    } else {
-      // Save default moods to localStorage if not exists
-      localStorage.setItem('moods', JSON.stringify(moods));
-    }
-  }, []);
+  const handleMoodSelect = async (mood) => {
+    try {
+      if (date) {
+        // Format the date to ISO string and remove time component
+        const formattedDate = new Date(date);
+        formattedDate.setHours(0, 0, 0, 0);
 
-  const handleMoodSelect = (mood) => {
-    onMoodSelect(mood);
-    setIsModalOpen(false);
-    
-    // Save mood data to localStorage
-    if (date) {
-      const dateKey = date.toISOString().split('T')[0];
-      const savedMoods = JSON.parse(localStorage.getItem('moodData') || '{}');
-      savedMoods[dateKey] = mood;
-      localStorage.setItem('moodData', JSON.stringify(savedMoods));
+        console.log('Selected mood:', mood);
+        console.log('Mood level:', mood.level);
+        console.log('Mood level type:', typeof mood.level);
+
+        // Ensure mood level is properly formatted
+        const formattedMood = {
+          ...mood,
+          level: mood.level // Use the exact level from the mood object
+        };
+
+        console.log('Formatted mood:', formattedMood);
+
+        const moodData = {
+          date: formattedDate.toISOString(),
+          level: formattedMood.level,
+          description: formattedMood.description,
+          emoji: formattedMood.emoji,
+          color: formattedMood.color
+        };
+
+        console.log('Sending mood data:', moodData);
+
+        // Check if mood exists for this date
+        const response = await api.get(`/moods?date=${formattedDate.toISOString()}`);
+        const existingMood = response.data.find(m => new Date(m.date).toDateString() === date.toDateString());
+
+        if (existingMood) {
+          // Update existing mood
+          console.log('Updating existing mood:', existingMood._id);
+          const updateResponse = await api.put(`/moods/${existingMood._id}`, moodData);
+          console.log('Update response:', updateResponse.data);
+        } else {
+          // Create new mood
+          console.log('Creating new mood');
+          const createResponse = await api.post('/moods', moodData);
+          console.log('Create response:', createResponse.data);
+        }
+
+        onMoodSelect(formattedMood);
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error('Error saving mood:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error details:', {
+        message: error.message,
+        status: error.response?.status,
+        data: error.response?.data
+      });
+      alert('Failed to save mood. Please try again.');
+    }
+  };
+
+  const handleClearMood = async () => {
+    try {
+      if (date) {
+        // Format the date to ISO string and remove time component
+        const formattedDate = new Date(date);
+        formattedDate.setHours(0, 0, 0, 0);
+
+        // Check if mood exists for this date
+        const response = await api.get(`/moods?date=${formattedDate.toISOString()}`);
+        const existingMood = response.data.find(m => new Date(m.date).toDateString() === date.toDateString());
+
+        if (existingMood) {
+          // Delete existing mood
+          await api.delete(`/moods/${existingMood._id}`);
+        }
+
+        onMoodSelect(null);
+        setIsModalOpen(false);
+      }
+    } catch (error) {
+      console.error('Error clearing mood:', error);
+      console.error('Error response:', error.response?.data);
+      alert('Failed to clear mood. Please try again.');
     }
   };
 
@@ -77,7 +140,7 @@ const MoodSelector = ({ selectedMood, onMoodSelect, date }) => {
                   className={`mood-button ${selectedMood?.level === mood.level ? 'selected' : ''}`}
                   onClick={() => handleMoodSelect(mood)}
                   style={{
-                    backgroundColor: selectedMood?.level === mood.level ? mood.color : 'transparent',
+                    '--mood-color': mood.color,
                     borderColor: mood.color
                   }}
                 >
@@ -91,7 +154,12 @@ const MoodSelector = ({ selectedMood, onMoodSelect, date }) => {
               {selectedMood && (
                 <button
                   className="mood-button clear-mood"
-                  onClick={() => handleMoodSelect(null)}
+                  onClick={handleClearMood}
+                  style={{
+                    backgroundColor: '#ff4444',
+                    color: 'white',
+                    borderColor: '#ff4444'
+                  }}
                 >
                   Clear Mood
                 </button>
