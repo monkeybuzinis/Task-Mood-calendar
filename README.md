@@ -1,8 +1,8 @@
 # Task Manager App
 #### Full Stack Engineering Team 1
-- Khanh Le
+- Thi Kim Khanh Le (monkeybuzinis)
 - Lily Le Hao
-- Justin Chen
+- Justin Chen (azncoffee)
 > April 8, 2025
 
 ## Description
