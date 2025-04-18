@@ -6,7 +6,7 @@
 > April 8, 2025
 
 ## Description
-A task management application using React and Express
+A task mood management application using React and Express
 
 ## Tech Stack
 - Frontend: React, Axios
