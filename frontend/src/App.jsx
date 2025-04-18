@@ -529,7 +529,7 @@ function App() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>Task Calendar</h1>
+      <h1 style={{ marginBottom: '20px', textAlign: 'center' }}>Task-Mood Calendar</h1>
       
       {error && (
         <div style={{
