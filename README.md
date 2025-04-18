@@ -1,4 +1,4 @@
-# Task Manager App
+# Task-Mood Calendar App
 #### Full Stack Engineering Team 1
 - Thi Kim Khanh Le (monkeybuzinis)
 - Lily Le Hao
